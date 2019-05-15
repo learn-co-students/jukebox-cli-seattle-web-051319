@@ -19,40 +19,46 @@ def help
 end
 
 def play(songs)
-  puts "Please enter a song name or number:"
+  puts "Please enter a song name or number: "
   user_choice = gets.chomp
-  
-  songs.each_with_index do |song, index|
-    if song.include?(user_choice) || user_choice == index-1
-      puts "Playing #{song}"
-    end
+
+  song_selection = songs.each_with_index.find do |song, index| 
+    song.downcase == user_choice.downcase || index == (user_choice.to_i)-1
   end
-  puts "Invalid input, please try again"
+
+  if song_selection 
+    puts "Playing #{song_selection}"
+  else 
+    puts "Invalid input, please try again"
+  end 
 end
 
 def list(songs)
-  songs.each_with_index do |song, index|
-    puts "#{index+1}. #{song}"
-  end
+  songs.each_with_index {|song, index| puts "#{index+1}. #{song}"}
 end
 
 def exit_jukebox
   puts "Goodbye"  
 end
 
+def make_selection
+  puts "Please enter a command:"
+  response = gets.chomp
+end
+
 def run(songs)
   help
-  user_response = ""
-  until user_response == "exit"
-    if user_response == "list"
-      list(songs)
-    elsif user_response == "play"
-      play(songs)
-    elsif user_response == "help"
-      help
+  selection = make_selection
+  until selection == "exit"
+    case selection
+      when "list"
+        list(songs)
+      when "play"
+        play(songs)
+      when "help"
+        help
     end
-    puts "Please enter a command:"
-    user_response = gets.chomp
+    selection = make_selection  
   end
   exit_jukebox
 end
